@@ -16,17 +16,27 @@ namespace GarbagePlugins
     {
         private static ConfigEntry<bool> configEnableOldSpeedChange;
         private static ConfigEntry<bool> configRankColorOnDoubleSpeed;
+        private static ConfigEntry<bool> configDebugMode;
+        private static ConfigEntry<bool> configShowFPS;
 
         private void Awake()
         {
             configEnableOldSpeedChange = Config.Bind("General", "EnableOldSpeedChange", true, "Changes chili/ice speed to be 2x/.5x, respectively");
             configRankColorOnDoubleSpeed = Config.Bind("General", "RankColorOnDoubleSpeed", true, "Changes rank screen color if EnableOldSpeedChange is enabled");
+            configDebugMode = Config.Bind("General", "DebugMode", false, "Enables Debug Mode");
+            configShowFPS = Config.Bind("General", "ShowFPS", true, "Shows FPS if Debug Mode is not active");
             
             if (configEnableOldSpeedChange.Value)
                 Harmony.CreateAndPatchAll(typeof(EnableOldSpeedChange));
 
             if (configEnableOldSpeedChange.Value && configRankColorOnDoubleSpeed.Value)
                 Harmony.CreateAndPatchAll(typeof(RankColorOnDoubleSpeed));
+
+            if (configDebugMode.Value)
+                Harmony.CreateAndPatchAll(typeof(DebugMode));
+
+            if (configShowFPS.Value && !configDebugMode.Value)
+                Harmony.CreateAndPatchAll(typeof(ShowFPS));
 
             Logger.LogInfo($"Plugin is loaded!");
         }
@@ -59,6 +69,32 @@ namespace GarbagePlugins
 
                 if (RDTime.speed > 1.5f) __instance.rank.color = new Color(1f, 0.2f, 0.2f);
                 if (RDTime.speed < 0.75f) __instance.rank.color = new Color(0.2f, 0.2f, 1f);
+            }
+        }
+
+        private static class DebugMode
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(scnBase), "Update")]
+            public static void Postfix()
+            {
+                if (!RDC.debug) RDC.debug = true;
+            }
+        }
+
+        private static class ShowFPS
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(scnGame), "Update")]
+            public static void Postfix(scnGame __instance)
+            {
+                if (!RDC.debug){
+                    __instance.debugText.gameObject.SetActive(true);
+                    if (scnGame.fps == 0.0) scnGame.fps = 1f / Time.unscaledDeltaTime;
+                    scnGame.fps = scnGame.fps * 0.99f + 1f / Time.unscaledDeltaTime * 0.01f;
+                    __instance.debugText.text = "" + string.Format("<color=#ffffff>FPS:</color> <color={0}>{1}</color>", (object) (scnGame.fps < 30 ? "#ff0000" : (scnGame.fps < 50 ? "#ffff00" : "#00ff00")), (object) scnGame.fps);
+                    __instance.currentLevel.Update();
+                }
             }
         }
     }
