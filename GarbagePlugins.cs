@@ -91,7 +91,7 @@ namespace GarbagePlugins
                 if (!RDC.debug){
                     __instance.debugText.gameObject.SetActive(true);
                     if (scnGame.fps == 0.0) scnGame.fps = 1f / Time.unscaledDeltaTime;
-                    scnGame.fps = scnGame.fps * 0.99f + 1f / Time.unscaledDeltaTime * 0.01f;
+                    scnGame.fps = scnGame.fps * 0.99f + (1f / Time.unscaledDeltaTime) * 0.01f;
                     __instance.debugText.text = "" + string.Format("<color=#ffffff>FPS:</color> <color={0}>{1}</color>", (object) (scnGame.fps < 30 ? "#ff0000" : (scnGame.fps < 50 ? "#ffff00" : "#00ff00")), (object) scnGame.fps);
                     __instance.currentLevel.Update();
                 }
