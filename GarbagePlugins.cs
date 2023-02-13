@@ -19,6 +19,7 @@ namespace GarbagePlugins
         private static ConfigEntry<bool> configDebugMode;
         private static ConfigEntry<ShowFpsOptions> configShowFPS;
         private static ConfigEntry<bool> configFiveFourteen;
+        private static ConfigEntry<bool> configHMode;
 
         private enum ShowFpsOptions { Enabled, Legacy, Disabled }
 
@@ -29,6 +30,7 @@ namespace GarbagePlugins
             configDebugMode = Config.Bind("General", "DebugMode", false, "Enables Debug Mode");
             configShowFPS = Config.Bind("General", "ShowFPS", ShowFpsOptions.Enabled, "Shows FPS if Debug Mode is not active");
             configFiveFourteen = Config.Bind("Funny", "FiveFourteen", false, "514");
+            configHMode = Config.Bind("Funny", "HMode", false, "Replaces \"Samurai.\" text with h");
             
             if (configEnableOldSpeedChange.Value)
                 Harmony.CreateAndPatchAll(typeof(EnableOldSpeedChange));
@@ -44,6 +46,9 @@ namespace GarbagePlugins
 
             if (configFiveFourteen.Value)
                 Harmony.CreateAndPatchAll(typeof(FiveFourteen));
+
+            if (configHMode.Value)
+                Harmony.CreateAndPatchAll(typeof(HMode));
 
             Logger.LogInfo($"Plugin is loaded!");
         }
@@ -127,6 +132,18 @@ namespace GarbagePlugins
                 __instance.resultsSingleplayer.gameObject.SetActive(true);
                 __instance.description.text = "514/514";
                 __instance.description.gameObject.SetActive(true);
+            }
+        }
+
+        private static class HMode
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(RDString), "Get")]
+            public static void Postfix(ref string __result)
+            {
+                if (RDString.samuraiMode){
+                    __result = "h";
+                }
             }
         }
     }
