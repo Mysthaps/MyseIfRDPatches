@@ -17,7 +17,7 @@ All configurations are disabled by default. Enable them from `BepInEx/config/com
 **Make sure you use the x86 version of BepInEx 5!** RD is x86 so the x64 version of BepInEx will not work, and BepInEx 6 is currently not yet compatible with BepInEx 5 mods.
 2. Unzip the file into your RD folder. You should have a `winhttp.dll`, `doorstop_config.ini`, and `BepInEx` folder next to Rhythm Doctor.exe.
 3. Launch RD once to generate BepInEx files.
-4. Download the latest version of the mod from [here](https://github.com/HellUser0/FPSCounterRD/releases). It should be named `GarbagePlugins_1.x.x.zip`.
+4. Download the latest version of the mod from [here](https://github.com/HellUser0/GarbagePlugins/releases). It should be named `GarbagePlugins_1.x.x.zip`.
 5. Unzip the file you downloaded into your Rhythm Doctor installation folder. You should now have a file at `BepInEx/plugins/GarbagePlugins/GarbagePlugins.dll`.
 6. Launch the game.
 7. Configure the plugin as needed in `BepInEx/config/com.rhythmdr.garbageplugins.cfg`.
