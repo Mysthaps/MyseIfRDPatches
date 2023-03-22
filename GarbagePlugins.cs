@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace GarbagePlugins
 {
-    [BepInPlugin("com.rhythmdr.garbageplugins", "Garbage Plugins", "1.3.0")]
+    [BepInPlugin("com.rhythmdr.garbageplugins", "Garbage Plugins", "1.3.1")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -139,6 +139,7 @@ namespace GarbagePlugins
 
         private static class ShowAccuracy
         {
+            // i'd like to apologize for this awful code
             private static int[] hits = {0, 0, 0, 0, 0, 0}; // 40, 80, 120, 160, 200, miss
 
             [HarmonyPrefix]
@@ -150,11 +151,29 @@ namespace GarbagePlugins
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(scrPlayerbox), "Pulse")]
-            public static void Postfix(float timeOffset)
+            public static void Postfix(float timeOffset, bool CPUTriggered = false, bool bomb = false)
             {
-                int num = Math.Abs((int) ((double) timeOffset * 1000.0 / 40));
-                if (num >= 5) hits[5]++;
-                else hits[num]++;
+                if (!CPUTriggered){
+                    int num = Math.Abs((int) ((double) timeOffset * 1000.0 / 40));
+                    if (num >= 5) hits[5]++;
+                    else hits[num]++;
+                }
+                if (bomb){
+                    hits[5]++;
+                }
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(Beat), "Update")]
+            public static void Postfix(Beat __instance)
+            {
+                if (!((UnityEngine.Object) __instance.row.playerBox == (UnityEngine.Object) null || (UnityEngine.Object) __instance.row.ent == (UnityEngine.Object) null || __instance.row.dead))
+                {
+                    if (__instance.conductor.audioPos > __instance.inputTime + 0.400000005960464 && !__instance.playerDrives7thBeat && !__instance.hasPulsed7thBeat && !__instance.bomb && !__instance.unhittable)
+                    {
+                        hits[5]++;
+                    }
+                }
             }
 
             [HarmonyPostfix]
@@ -165,7 +184,6 @@ namespace GarbagePlugins
                 {
                     if (!GC.twoPlayerMode)
                     {
-                        // myseif writes "disgusting code", asked to leave rdl
                         double num = (hits[0] + hits[1] * 0.9 + hits[2] * 0.75 + hits[3] * 0.5 + hits[4] * 0.25) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4] + hits[5]) * 100;
                         __instance.resultsSingleplayer.text = __instance.resultsSingleplayer.text + "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
                         __instance.resultsSingleplayer.gameObject.SetActive(true);
@@ -178,7 +196,8 @@ namespace GarbagePlugins
             }
 
             // debug
-            /*[HarmonyPostfix]
+            /*
+            [HarmonyPostfix]
             [HarmonyPatch(typeof(scnGame), "Update")]
             public static void Postfix(scnGame __instance)
             {
@@ -187,7 +206,8 @@ namespace GarbagePlugins
                     __instance.debugText.text += string.Format("\n{0}, {1}, {2}, {3}, {4}, {5}", (object) (int) hits[0], (object) (int) hits[1], (object) (int) hits[2], (object) (int) hits[3], (object) (int) hits[4], (object) (int) hits[5]);
                     __instance.currentLevel.Update();
                 }
-            }*/
+            }
+            */
         }
     }
 }
