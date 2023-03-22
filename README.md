@@ -10,7 +10,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 - **SamuHrai**, **FiveFourteen**: Joke settings. Will not be updated.
 
 ## Warning
-All configurations are disabled by default. Enable them from `BepInEx/config/com.rhythmdr.garbageplugins.cfg` or via ScriptEngine.
+All configurations are disabled by default. Enable them from `BepInEx/config/com.rhythmdr.garbageplugins.cfg` or via BepInEx Configuration Manager.
 
 ## Installation
 1. Download the latest version of **BepInEx 5 x86** [here](https://github.com/BepInEx/BepInEx/releases/latest). \
