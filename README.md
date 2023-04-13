@@ -6,6 +6,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 - **ShowAccuracy**: Shows your accuracy after a level.
 - **EnableOldSpeedChange**: Changes speed mods to 2x and 0.5x.
 - **RankColorOnDoubleSpeed**: Changes rank colors if **EnableOldSpeedChange** is enabled.
+- **EnableBossSpeedChange**: Allows you to change your speed on Boss levels.
 
 - **SamuHrai**, **FiveFourteen**: Joke settings. Will not be updated.
 
@@ -25,6 +26,6 @@ All configurations are disabled by default. Enable them from `BepInEx/config/com
 6. Launch the game.
 7. Configure the plugin as needed in `BepInEx/config/com.rhythmdr.garbageplugins.cfg`.
 8. **Optional:** Install the [BepInEx Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager) to configure the mod with a GUI by pressing `F1`.
-9. **Optional:** To enable in-game reloading, install the [BepInEx ScriptEngine](https://github.com/BepInEx/BepInEx.Debug/releases/latest), create a `scripts` folder in the `BepInEx` folder then move the `GarbagePlugins.dll` file to that folder. You should now be able to reload the plugin by pressing `F6` in-game.
+9. **Optional:** To enable in-game reloading, install the [BepInEx ScriptEngine](https://github.com/BepInEx/BepInEx.Debug/releases/latest), create a `scripts` folder in the `BepInEx` folder then move the `GarbagePlugins.dll` file to that folder. You should now be able to reload the plugin by pressing `F6` in-game. Enabling "LoadOnStart" is highly recommended.
 
 For more information, check out the [BepInEx installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html).
