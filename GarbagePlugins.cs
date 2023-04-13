@@ -10,12 +10,13 @@ using UnityEngine.UI;
 
 namespace GarbagePlugins
 {
-    [BepInPlugin("com.rhythmdr.garbageplugins", "Garbage Plugins", "1.3.1")]
+    [BepInPlugin("com.rhythmdr.garbageplugins", "Garbage Plugins", "1.3.2")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Plugin : BaseUnityPlugin
     {
         private static ConfigEntry<bool> configEnableOldSpeedChange;
         private static ConfigEntry<bool> configRankColorOnDoubleSpeed;
+        private static ConfigEntry<bool> configEnableBossSpeedChange;
         private static ConfigEntry<ShowFpsOptions> configShowFPS;
         private static ConfigEntry<bool> configFiveFourteen;
         private static ConfigEntry<bool> configSamuHrai;
@@ -27,6 +28,7 @@ namespace GarbagePlugins
         {
             configEnableOldSpeedChange = Config.Bind("Speed Modifiers", "EnableOldSpeedChange", false, "Changes chili/ice speed to be 2x/.5x, respectively");
             configRankColorOnDoubleSpeed = Config.Bind("Speed Modifiers", "RankColorOnDoubleSpeed", false, "Changes rank screen color if EnableOldSpeedChange is enabled");
+            configEnableBossSpeedChange = Config.Bind("Speed Modifiers", "EnableBossSpeedChange", false, "Allows the speed of boss levels to be changed");
             configShowFPS = Config.Bind("General", "ShowFPS", ShowFpsOptions.Disabled, "Adds an FPS counter on the top right of the screen while in a level.");
             configFiveFourteen = Config.Bind("Funny", "FiveFourteen", false, "514");
             configSamuHrai = Config.Bind("Funny", "SamuHrai", false, "Replaces \"Samurai.\" text with \"h\"");
@@ -37,6 +39,9 @@ namespace GarbagePlugins
 
             if (configEnableOldSpeedChange.Value && configRankColorOnDoubleSpeed.Value)
                 Harmony.CreateAndPatchAll(typeof(RankColorOnDoubleSpeed));
+
+            if (configEnableBossSpeedChange.Value)
+                Harmony.CreateAndPatchAll(typeof(EnableBossSpeedChange));
 
             if (configShowFPS.Value != ShowFpsOptions.Disabled)
                 Harmony.CreateAndPatchAll(typeof(ShowFPS));
@@ -81,6 +86,17 @@ namespace GarbagePlugins
 
                 if (RDTime.speed > 1.5f) __instance.rank.color = new Color(1f, 0.2f, 0.2f);
                 if (RDTime.speed < 0.75f) __instance.rank.color = new Color(0.2f, 0.2f, 1f);
+            }
+        }
+
+        private static class EnableBossSpeedChange
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(HeartMonitor), "Show")]
+            public static void Postfix(HeartMonitor __instance, SelectableCharacter character, Difficulty difficulty)
+            {
+                Rank levelRank = Persistence.GetLevelRank(character.levels[difficulty]);
+                __instance.ToggleSpeed((int) levelRank != -1 && (int) levelRank != -2);
             }
         }
 
@@ -142,6 +158,20 @@ namespace GarbagePlugins
             // i'd like to apologize for this awful code
             private static int[] hits = {0, 0, 0, 0, 0, 0}; // 40, 80, 120, 160, 200, miss
 
+            [HarmonyTranspiler]
+            [HarmonyPatch(typeof(scnGame), "Start")]
+            public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            {
+                return new CodeMatcher(instructions)
+                    .MatchForward(false,
+                        new CodeMatch(OpCodes.Ldstr, "Level_"))
+                    .Advance(3)
+                    .InsertAndAdvance(
+                        new CodeInstruction(OpCodes.Ldstr, ", Assembly-CSharp"),
+                        new CodeInstruction(OpCodes.Call, AccessTools.Method("System.String:Concat", new Type[] { typeof(String), typeof(String) })))
+                    .InstructionEnumeration();
+            }
+
             [HarmonyPrefix]
             [HarmonyPatch(typeof(scnGame), "Start")]
             public static void Prefix()
@@ -169,7 +199,7 @@ namespace GarbagePlugins
             {
                 if (!((UnityEngine.Object) __instance.row.playerBox == (UnityEngine.Object) null || (UnityEngine.Object) __instance.row.ent == (UnityEngine.Object) null || __instance.row.dead))
                 {
-                    if (__instance.conductor.audioPos > __instance.inputTime + 0.400000005960464 && !__instance.playerDrives7thBeat && !__instance.hasPulsed7thBeat && !__instance.bomb && !__instance.unhittable)
+                    if (__instance.conductor.audioPos > __instance.inputTime + 0.4 && !__instance.playerDrives7thBeat && !__instance.hasPulsed7thBeat && !__instance.bomb && !__instance.unhittable)
                     {
                         hits[5]++;
                     }
@@ -180,14 +210,12 @@ namespace GarbagePlugins
             [HarmonyPatch(typeof(HUD), "ShowRankDescription")]
             public static void Postfix(HUD __instance)
             {
-                if (GC.showAbsoluteOffsets)
+                if (__instance.game.currentLevel.levelType == LevelType.Boss) return;
+                if (GC.showAbsoluteOffsets && !GC.twoPlayerMode)
                 {
-                    if (!GC.twoPlayerMode)
-                    {
-                        double num = (hits[0] + hits[1] * 0.9 + hits[2] * 0.75 + hits[3] * 0.5 + hits[4] * 0.25) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4] + hits[5]) * 100;
-                        __instance.resultsSingleplayer.text = __instance.resultsSingleplayer.text + "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
-                        __instance.resultsSingleplayer.gameObject.SetActive(true);
-                    }
+                    double num = (hits[0] + hits[1] * 0.9 + hits[2] * 0.75 + hits[3] * 0.5 + hits[4] * 0.25) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4] + hits[5]) * 100;
+                    __instance.resultsSingleplayer.text = __instance.resultsSingleplayer.text + "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
+                    __instance.resultsSingleplayer.gameObject.SetActive(true);
                 }
                 else 
                 {
