@@ -176,7 +176,7 @@ namespace GarbagePlugins
             [HarmonyPatch(typeof(scnGame), "Start")]
             public static void Prefix()
             {
-                hits = new int[] {0, 0, 0, 0, 0, 0};
+                hits = new int[] {0, 0, 0, 0, 0};
             }
 
             [HarmonyPostfix]
@@ -184,12 +184,15 @@ namespace GarbagePlugins
             public static void Postfix(float timeOffset, bool CPUTriggered = false, bool bomb = false)
             {
                 if (!CPUTriggered){
-                    int num = Math.Abs((int) ((double) timeOffset * 1000.0 / 40));
-                    if (num >= 5) hits[5]++;
-                    else hits[num]++;
+                    if (timeOffset * 1000 <= 25) hits[0]++;
+                    else {
+                        int num = Math.Abs((int) ((double) timeOffset * 1000.0 / 40)) + 1;
+                        if (num >= 4) hits[4]++;
+                        else hits[num]++;
+                    }
                 }
                 if (bomb){
-                    hits[5]++;
+                    hits[4]++;
                 }
             }
 
@@ -201,7 +204,7 @@ namespace GarbagePlugins
                 {
                     if (__instance.conductor.audioPos > __instance.inputTime + 0.4 && !__instance.playerDrives7thBeat && !__instance.hasPulsed7thBeat && !__instance.bomb && !__instance.unhittable)
                     {
-                        hits[5]++;
+                        hits[4]++;
                     }
                 }
             }
@@ -213,7 +216,7 @@ namespace GarbagePlugins
                 if (__instance.game.currentLevel.levelType == LevelType.Boss) return;
                 if (GC.showAbsoluteOffsets && !GC.twoPlayerMode)
                 {
-                    double num = (hits[0] + hits[1] * 0.9 + hits[2] * 0.75 + hits[3] * 0.5 + hits[4] * 0.25) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4] + hits[5]) * 100;
+                    double num = (hits[0] * 1.01 + hits[1] + hits[2] * 0.9 + hits[3] * 0.75) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
                     __instance.resultsSingleplayer.text = __instance.resultsSingleplayer.text + "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
                     __instance.resultsSingleplayer.gameObject.SetActive(true);
                 }
