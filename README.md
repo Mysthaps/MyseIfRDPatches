@@ -2,16 +2,27 @@ A plugin that adds several modifications to Rhythm Doctor.
 
 ## Features
 
-- **ShowFPS**: Shows an FPS counter while in-game.
-- **ShowAccuracy**: Shows your accuracy after a level.
-- **EnableOldSpeedChange**: Changes speed mods to 2x and 0.5x.
+- **ShowFPS**: Adds an FPS counter on the top left of the screen while in a level.
+- **ShowAccuracy**: Adds an accuracy count at the end of a level if Detailed Level Results is enabled.
+- **EnableOldSpeedChange**: Changes chili/ice speed to be 2x/.5x, respectively.
 - **RankColorOnDoubleSpeed**: Changes rank colors if **EnableOldSpeedChange** is enabled.
-- **EnableBossSpeedChange**: Allows you to change your speed on Boss levels.
-
+- **EnableBossSpeedChange**: Allows the speed of boss levels to be changed.
 - **SamuHrai**, **FiveFourteen**: Joke settings. Will not be updated.
 
-## Warning
-All configurations are disabled by default. Enable them from `BepInEx/config/com.rhythmdr.garbageplugins.cfg` or via BepInEx Configuration Manager.
+## Notes
+- All configurations are disabled by default. Enable them from `BepInEx/config/com.rhythmdr.garbageplugins.cfg` or via BepInEx Configuration Manager.
+- For **ShowAccuracy**:
+  - Does not work in 2P mode yet.
+  - Calculating accuracy:
+
+| Margins | Accuracy |
+| --- | --- |
+| ±25ms | 100.01% |
+| ±40ms | 100% |
+| ±80ms | 90% |
+| ±120ms | 75% |
+| ±400ms or completely miss | 0% |
+- For **EnableOldSpeedChange**: Normal oneshot animations will be broken. Bars shorter than 200ms will not work properly.
 
 ## Installation
 1. Download the latest version of BepInEx 5 [here](https://github.com/BepInEx/BepInEx/releases). (Scroll down past the BepInEx 6 pre-release)

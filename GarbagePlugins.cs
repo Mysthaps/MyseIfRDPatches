@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace GarbagePlugins
 {
-    [BepInPlugin("com.rhythmdr.garbageplugins", "Garbage Plugins", "1.3.2")]
+    [BepInPlugin("com.rhythmdr.garbageplugins", "Garbage Plugins", "1.3.3")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -26,12 +26,12 @@ namespace GarbagePlugins
 
         private void Awake()
         {
-            configEnableOldSpeedChange = Config.Bind("Speed Modifiers", "EnableOldSpeedChange", false, "Changes chili/ice speed to be 2x/.5x, respectively");
-            configRankColorOnDoubleSpeed = Config.Bind("Speed Modifiers", "RankColorOnDoubleSpeed", false, "Changes rank screen color if EnableOldSpeedChange is enabled");
-            configEnableBossSpeedChange = Config.Bind("Speed Modifiers", "EnableBossSpeedChange", false, "Allows the speed of boss levels to be changed");
-            configShowFPS = Config.Bind("General", "ShowFPS", ShowFpsOptions.Disabled, "Adds an FPS counter on the top right of the screen while in a level.");
+            configEnableOldSpeedChange = Config.Bind("Speed Modifiers", "EnableOldSpeedChange", false, "Changes chili/ice speed to be 2x/.5x, respectively.");
+            configRankColorOnDoubleSpeed = Config.Bind("Speed Modifiers", "RankColorOnDoubleSpeed", false, "Changes rank screen color if EnableOldSpeedChange is enabled.");
+            configEnableBossSpeedChange = Config.Bind("Speed Modifiers", "EnableBossSpeedChange", false, "Allows the speed of boss levels to be changed.");
+            configShowFPS = Config.Bind("General", "ShowFPS", ShowFpsOptions.Disabled, "Adds an FPS counter on the top left of the screen while in a level.");
             configFiveFourteen = Config.Bind("Funny", "FiveFourteen", false, "514");
-            configSamuHrai = Config.Bind("Funny", "SamuHrai", false, "Replaces \"Samurai.\" text with \"h\"");
+            configSamuHrai = Config.Bind("Funny", "SamuHrai", false, "Replaces \"Samurai.\" text with \"h\" in Samurai. easter egg.");
             configShowAccuracy = Config.Bind("General", "ShowAccuracy", false, "Adds an accuracy count at the end of a level if Detailed Level Results is enabled.\nDoes not work for 2P.");
             
             if (configEnableOldSpeedChange.Value)
@@ -155,8 +155,19 @@ namespace GarbagePlugins
 
         private static class ShowAccuracy
         {
-            // i'd like to apologize for this awful code
-            private static int[] hits = {0, 0, 0, 0, 0, 0}; // 40, 80, 120, 160, 200, miss
+            private static int[] hits = {0, 0, 0, 0, 0}; // 25, 40, 80, 120, miss
+
+            public static void AddAccuracy(double timeOffset)
+            {
+                if (Math.Abs((int) ((double) timeOffset * 1000)) <= 25) hits[0]++;
+                else {
+                    int num = Math.Abs((int) ((double) timeOffset * 1000 / 40)) + 1;
+                    if (num >= 4) hits[4]++;
+                    else hits[num]++;
+                }
+            }
+
+            // TODO: Make stacked oneshots count towards acc only once
 
             [HarmonyTranspiler]
             [HarmonyPatch(typeof(scnGame), "Start")]
@@ -181,19 +192,20 @@ namespace GarbagePlugins
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(scrPlayerbox), "Pulse")]
-            public static void Postfix(float timeOffset, bool CPUTriggered = false, bool bomb = false)
+            public static void Postfix(float timeOffset, bool CPUTriggered, bool bomb)
             {
-                if (!CPUTriggered){
-                    if (timeOffset * 1000 <= 25) hits[0]++;
-                    else {
-                        int num = Math.Abs((int) ((double) timeOffset * 1000.0 / 40)) + 1;
-                        if (num >= 4) hits[4]++;
-                        else hits[num]++;
-                    }
-                }
-                if (bomb){
-                    hits[4]++;
-                }
+                if (bomb) hits[4]++;
+                else if (!CPUTriggered) AddAccuracy((double) timeOffset);
+            }
+
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(scrPlayerbox), "SpaceBarReleased")]
+            public static bool Prefix(RDPlayer player, scrPlayerbox __instance, bool cpuTriggered) // why the fuck is cpu not capitalized here
+            {
+                if (player != __instance.ent.row.playerProp.GetCurrentPlayer() || !__instance.beatBeingHeld || cpuTriggered) return true;
+                double timeOffset = __instance.conductor.audioPos - __instance.beatReleaseTime;
+                AddAccuracy(timeOffset);
+                return true;
             }
 
             [HarmonyPrefix]
@@ -227,18 +239,16 @@ namespace GarbagePlugins
             }
 
             // debug
-            /*
-            [HarmonyPostfix]
+            /*[HarmonyPostfix]
             [HarmonyPatch(typeof(scnGame), "Update")]
             public static void Postfix(scnGame __instance)
             {
                 if (!RDC.debug){
                     __instance.debugText.gameObject.SetActive(true);
-                    __instance.debugText.text += string.Format("\n{0}, {1}, {2}, {3}, {4}, {5}", (object) (int) hits[0], (object) (int) hits[1], (object) (int) hits[2], (object) (int) hits[3], (object) (int) hits[4], (object) (int) hits[5]);
+                    __instance.debugText.text += string.Format("\n{0}, {1}, {2}, {3}, {4}", (object) (int) hits[0], (object) (int) hits[1], (object) (int) hits[2], (object) (int) hits[3], (object) (int) hits[4]);
                     __instance.currentLevel.Update();
                 }
-            }
-            */
+            }*/
         }
     }
 }
