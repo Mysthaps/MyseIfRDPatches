@@ -228,7 +228,7 @@ namespace GarbagePlugins
                 if (__instance.game.currentLevel.levelType == LevelType.Boss) return;
                 if (GC.showAbsoluteOffsets && !GC.twoPlayerMode)
                 {
-                    double num = (hits[0] * 1.01 + hits[1] + hits[2] * 0.9 + hits[3] * 0.75) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
+                    double num = (hits[0] * 1.0001 + hits[1] + hits[2] * 0.9 + hits[3] * 0.75) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
                     __instance.resultsSingleplayer.text = __instance.resultsSingleplayer.text + "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
                     __instance.resultsSingleplayer.gameObject.SetActive(true);
                 }
