@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace GarbagePlugins
 {
-    [BepInPlugin("com.rhythmdr.garbageplugins", "MyseIf's Plugins", "1.3.3")]
+    [BepInPlugin("com.rhythmdr.garbageplugins", "MyseIf's RD Patches", "1.3.4")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -190,7 +190,7 @@ namespace GarbagePlugins
 
             [HarmonyPrefix]
             [HarmonyPatch(typeof(scrPlayerbox), "Pulse")]
-            public static bool Prefix(scrPlayerbox __instance, float timeOffset, bool CPUTriggered, bool bomb)
+            public static bool Prefix(scrPlayerbox __instance, float timeOffset, bool CPUTriggered, bool bomb) // why the fuck is cpu capitalized here
             {
                 if (Time.frameCount == Row.lastHitFrame[(int) __instance.ent.row.playerProp.GetCurrentPlayer()]) return true;
                 if (bomb) hits[4]++;
@@ -200,7 +200,7 @@ namespace GarbagePlugins
 
             [HarmonyPrefix]
             [HarmonyPatch(typeof(scrPlayerbox), "SpaceBarReleased")]
-            public static bool Prefix(RDPlayer player, scrPlayerbox __instance, bool cpuTriggered) // why the fuck is cpu not capitalized here
+            public static bool Prefix(RDPlayer player, scrPlayerbox __instance, bool cpuTriggered) 
             {
                 if (player != __instance.ent.row.playerProp.GetCurrentPlayer() || !__instance.beatBeingHeld || cpuTriggered) return true;
                 double timeOffset = __instance.conductor.audioPos - __instance.beatReleaseTime;
@@ -228,7 +228,7 @@ namespace GarbagePlugins
                 if (__instance.game.currentLevel.levelType == LevelType.Boss) return;
                 if (GC.showAbsoluteOffsets && !GC.twoPlayerMode)
                 {
-                    double num = (hits[0] + hits[1] + hits[2] * 0.9 + hits[3] * 0.75) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
+                    double num = (hits[0] + hits[1] + hits[2] * 0.85 + hits[3] * 0.6) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
                     num += hits[0] * 0.01;
                     __instance.resultsSingleplayer.text = __instance.resultsSingleplayer.text + "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
                     __instance.resultsSingleplayer.gameObject.SetActive(true);
