@@ -240,7 +240,7 @@ namespace GarbagePlugins
             }
 
             // debug
-            [HarmonyPostfix]
+            /*[HarmonyPostfix]
             [HarmonyPatch(typeof(scnGame), "Update")]
             public static void Postfix(scnGame __instance)
             {
@@ -249,7 +249,7 @@ namespace GarbagePlugins
                     __instance.debugText.text += string.Format("\n{0}, {1}, {2}, {3}, {4}", (object) (int) hits[0], (object) (int) hits[1], (object) (int) hits[2], (object) (int) hits[3], (object) (int) hits[4]);
                     __instance.currentLevel.Update();
                 }
-            }
+            }*/
         }
     }
 }
