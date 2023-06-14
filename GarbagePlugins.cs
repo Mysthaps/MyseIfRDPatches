@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace GarbagePlugins
 {
-    [BepInPlugin("com.rhythmdr.garbageplugins", "Garbage Plugins", "1.3.3")]
+    [BepInPlugin("com.rhythmdr.garbageplugins", "MyseIf's Plugins", "1.3.3")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -167,8 +167,6 @@ namespace GarbagePlugins
                 }
             }
 
-            // TODO: Make stacked oneshots count towards acc only once
-
             [HarmonyTranspiler]
             [HarmonyPatch(typeof(scnGame), "Start")]
             public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -190,12 +188,14 @@ namespace GarbagePlugins
                 hits = new int[] {0, 0, 0, 0, 0};
             }
 
-            [HarmonyPostfix]
+            [HarmonyPrefix]
             [HarmonyPatch(typeof(scrPlayerbox), "Pulse")]
-            public static void Postfix(float timeOffset, bool CPUTriggered, bool bomb)
+            public static bool Prefix(scrPlayerbox __instance, float timeOffset, bool CPUTriggered, bool bomb)
             {
+                if (Time.frameCount == Row.lastHitFrame[(int) __instance.ent.row.playerProp.GetCurrentPlayer()]) return true;
                 if (bomb) hits[4]++;
                 else if (!CPUTriggered) AddAccuracy((double) timeOffset);
+                return true;
             }
 
             [HarmonyPrefix]
@@ -239,7 +239,7 @@ namespace GarbagePlugins
             }
 
             // debug
-            /*[HarmonyPostfix]
+            [HarmonyPostfix]
             [HarmonyPatch(typeof(scnGame), "Update")]
             public static void Postfix(scnGame __instance)
             {
@@ -248,7 +248,7 @@ namespace GarbagePlugins
                     __instance.debugText.text += string.Format("\n{0}, {1}, {2}, {3}, {4}", (object) (int) hits[0], (object) (int) hits[1], (object) (int) hits[2], (object) (int) hits[3], (object) (int) hits[4]);
                     __instance.currentLevel.Update();
                 }
-            }*/
+            }
         }
     }
 }
