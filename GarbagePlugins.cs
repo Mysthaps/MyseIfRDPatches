@@ -21,6 +21,7 @@ namespace GarbagePlugins
         private static ConfigEntry<bool> configFiveFourteen;
         private static ConfigEntry<bool> configSamuHrai;
         private static ConfigEntry<bool> configShowAccuracy;
+        private static ConfigEntry<bool> configAutoArtistLinks;
 
         private enum ShowFpsOptions { Enabled, Legacy, Disabled }
 
@@ -33,6 +34,7 @@ namespace GarbagePlugins
             configFiveFourteen = Config.Bind("Funny", "FiveFourteen", false, "514");
             configSamuHrai = Config.Bind("Funny", "SamuHrai", false, "Replaces \"Samurai.\" text with \"h\" in Samurai. easter egg.");
             configShowAccuracy = Config.Bind("General", "ShowAccuracy", false, "Adds an accuracy count at the end of a level if Detailed Level Results is enabled.\nDoes not work for 2P.");
+            configAutoArtistLinks = Config.Bind("Editor", "AutoArtistLinks", false, "Automatically adds artist links to a level. (from ADOFAI)");
             
             if (configEnableOldSpeedChange.Value)
                 Harmony.CreateAndPatchAll(typeof(EnableOldSpeedChange));
@@ -54,6 +56,9 @@ namespace GarbagePlugins
 
             if (configShowAccuracy.Value)
                 Harmony.CreateAndPatchAll(typeof(ShowAccuracy));
+
+            if (configAutoArtistLinks.Value)
+                Harmony.CreateAndPatchAll(typeof(AutoArtistLinks));
 
             Logger.LogInfo($"Plugin is loaded!");
         }
@@ -238,18 +243,26 @@ namespace GarbagePlugins
                     __instance.resultsSingleplayer.gameObject.SetActive(false);
                 }
             }
+        }
 
-            // debug
-            /*[HarmonyPostfix]
-            [HarmonyPatch(typeof(scnGame), "Update")]
-            public static void Postfix(scnGame __instance)
+        private static class AutoArtistLinks
+        {
+            private static string str = "";
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(ArtistUIDisclaimer), "SetData")]
+            public static void Postfix(ArtistData data, ArtistUIDisclaimer __instance)
             {
-                if (!RDC.debug){
-                    __instance.debugText.gameObject.SetActive(true);
-                    __instance.debugText.text += string.Format("\n{0}, {1}, {2}, {3}, {4}", (object) (int) hits[0], (object) (int) hits[1], (object) (int) hits[2], (object) (int) hits[3], (object) (int) hits[4]);
-                    __instance.currentLevel.Update();
-                }
-            }*/
+                if (!string.IsNullOrEmpty(data.link1)) str = data.link1;
+                if (!string.IsNullOrEmpty(data.link2)) str = str + ", " + data.link2;
+                __instance.editor.levelSettings.artistLinks = str;
+            }
+
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(RDLevelEditor.InspectorPanel_LevelSettings), "HideArtistDropdown")]
+            public static void Postfix(ref InputField ___artistLinks)
+            {
+                ___artistLinks.text = str;
+            }
         }
     }
 }
