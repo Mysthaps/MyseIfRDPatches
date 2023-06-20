@@ -17,10 +17,10 @@ A plugin that adds several modifications to Rhythm Doctor.
 
 | Margins | Accuracy |
 | --- | --- |
-| ±25ms | 100.01% |
+| ±25ms | +0.01% |
 | ±40ms | 100% |
-| ±80ms | 90% |
-| ±120ms | 75% |
+| ±80ms | 85% |
+| ±120ms | 60% |
 | ±400ms or completely miss | 0% |
 - For **EnableOldSpeedChange**: Normal oneshot animations will be broken. Bars shorter than 200ms will not work properly.
 
