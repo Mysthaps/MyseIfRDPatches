@@ -234,8 +234,8 @@ namespace GarbagePlugins
                 if (GC.showAbsoluteOffsets && !GC.twoPlayerMode)
                 {
                     double num = (hits[0] + hits[1] + hits[2] * 0.75 + hits[3] * 0.5) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
-                    __instance.resultsSingleplayer.text += "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
-                    if (hits[0] > 0) __instance.resultsSingleplayer.text += " + " + (hits[0] * 0.01).ToString() + "%";
+                    __instance.resultsSingleplayer.text += "\nAccuracy: " + Math.Round(num, 2).ToString("0.00") + "%";
+                    if (hits[0] > 0) __instance.resultsSingleplayer.text += " + " + (hits[0] * 0.01).ToString("0.00") + "%";
                     __instance.resultsSingleplayer.gameObject.SetActive(true);
                 }
                 else 
