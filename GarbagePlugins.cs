@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace GarbagePlugins
 {
-    [BepInPlugin("com.rhythmdr.garbageplugins", "MyseIf's RD Patches", "1.3.4")]
+    [BepInPlugin("com.rhythmdr.garbageplugins", "MyseIf's RD Patches", "1.4.0")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -18,10 +18,10 @@ namespace GarbagePlugins
         private static ConfigEntry<bool> configRankColorOnDoubleSpeed;
         private static ConfigEntry<bool> configEnableBossSpeedChange;
         private static ConfigEntry<ShowFpsOptions> configShowFPS;
-        private static ConfigEntry<bool> configFiveFourteen;
-        private static ConfigEntry<bool> configSamuHrai;
         private static ConfigEntry<bool> configShowAccuracy;
         private static ConfigEntry<bool> configAutoArtistLinks;
+        private static ConfigEntry<bool> configFiveFourteen;
+        private static ConfigEntry<bool> configSamuHrai;
 
         private enum ShowFpsOptions { Enabled, Legacy, Disabled }
 
@@ -31,10 +31,10 @@ namespace GarbagePlugins
             configRankColorOnDoubleSpeed = Config.Bind("Speed Modifiers", "RankColorOnDoubleSpeed", false, "Changes rank screen color if EnableOldSpeedChange is enabled.");
             configEnableBossSpeedChange = Config.Bind("Speed Modifiers", "EnableBossSpeedChange", false, "Allows the speed of boss levels to be changed.");
             configShowFPS = Config.Bind("General", "ShowFPS", ShowFpsOptions.Disabled, "Adds an FPS counter on the top left of the screen while in a level.");
-            configFiveFourteen = Config.Bind("Funny", "FiveFourteen", false, "514");
-            configSamuHrai = Config.Bind("Funny", "SamuHrai", false, "Replaces \"Samurai.\" text with \"h\" in Samurai. easter egg.");
             configShowAccuracy = Config.Bind("General", "ShowAccuracy", false, "Adds an accuracy count at the end of a level if Detailed Level Results is enabled.\nDoes not work for 2P.");
             configAutoArtistLinks = Config.Bind("Editor", "AutoArtistLinks", false, "Automatically adds artist links to a level. (from ADOFAI)");
+            configFiveFourteen = Config.Bind("Funny", "FiveFourteen", false, "514");
+            configSamuHrai = Config.Bind("Funny", "SamuHrai", false, "Replaces \"Samurai.\" text with \"h\" in Samurai. easter egg.");
             
             if (configEnableOldSpeedChange.Value)
                 Harmony.CreateAndPatchAll(typeof(EnableOldSpeedChange));
@@ -48,17 +48,17 @@ namespace GarbagePlugins
             if (configShowFPS.Value != ShowFpsOptions.Disabled)
                 Harmony.CreateAndPatchAll(typeof(ShowFPS));
 
-            if (configFiveFourteen.Value)
-                Harmony.CreateAndPatchAll(typeof(FiveFourteen));
-
-            if (configSamuHrai.Value)
-                Harmony.CreateAndPatchAll(typeof(SamuHrai));
-
             if (configShowAccuracy.Value)
                 Harmony.CreateAndPatchAll(typeof(ShowAccuracy));
 
             if (configAutoArtistLinks.Value)
                 Harmony.CreateAndPatchAll(typeof(AutoArtistLinks));
+
+            if (configFiveFourteen.Value)
+                Harmony.CreateAndPatchAll(typeof(FiveFourteen));
+
+            if (configSamuHrai.Value)
+                Harmony.CreateAndPatchAll(typeof(SamuHrai));
 
             Logger.LogInfo($"Plugin is loaded!");
         }
@@ -128,32 +128,6 @@ namespace GarbagePlugins
                     }
                     
                     __instance.currentLevel.Update();
-                }
-            }
-        }
-
-        private static class FiveFourteen
-        {
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(HUD), "ShowRankDescription")]
-            public static void Postfix(HUD __instance)
-            {
-                string str = "Mistakes: 514\n514 early + 514 late = 514 offset frames";
-                __instance.resultsSingleplayer.text = str;
-                __instance.resultsSingleplayer.gameObject.SetActive(true);
-                __instance.description.text = "514/514";
-                __instance.description.gameObject.SetActive(true);
-            }
-        }
-
-        private static class SamuHrai
-        {
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(RDString), "Get")]
-            public static void Postfix(ref string __result)
-            {
-                if (RDString.samuraiMode){
-                    __result = "h";
                 }
             }
         }
@@ -262,6 +236,32 @@ namespace GarbagePlugins
             public static void Postfix(ref InputField ___artistLinks)
             {
                 ___artistLinks.text = str;
+            }
+        }
+
+        private static class FiveFourteen
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(HUD), "ShowRankDescription")]
+            public static void Postfix(HUD __instance)
+            {
+                string str = "Mistakes: 514\n514 early + 514 late = 514 offset frames";
+                __instance.resultsSingleplayer.text = str;
+                __instance.resultsSingleplayer.gameObject.SetActive(true);
+                __instance.description.text = "514/514";
+                __instance.description.gameObject.SetActive(true);
+            }
+        }
+
+        private static class SamuHrai
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(RDString), "Get")]
+            public static void Postfix(ref string __result)
+            {
+                if (RDString.samuraiMode){
+                    __result = "h";
+                }
             }
         }
     }
