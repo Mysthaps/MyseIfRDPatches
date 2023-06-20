@@ -192,9 +192,9 @@ namespace GarbagePlugins
             [HarmonyPatch(typeof(scrPlayerbox), "Pulse")]
             public static bool Prefix(scrPlayerbox __instance, float timeOffset, bool CPUTriggered, bool bomb) // why the fuck is cpu capitalized here
             {
-                if (Time.frameCount == Row.lastHitFrame[(int) __instance.ent.row.playerProp.GetCurrentPlayer()]) return true;
+                if (CPUTriggered || Time.frameCount == Row.lastHitFrame[(int) __instance.ent.row.playerProp.GetCurrentPlayer()]) return true;
                 if (bomb) hits[4]++;
-                else if (!CPUTriggered) AddAccuracy((double) timeOffset);
+                else AddAccuracy((double) timeOffset);
                 return true;
             }
 
@@ -228,9 +228,9 @@ namespace GarbagePlugins
                 if (__instance.game.currentLevel.levelType == LevelType.Boss) return;
                 if (GC.showAbsoluteOffsets && !GC.twoPlayerMode)
                 {
-                    double num = (hits[0] + hits[1] + hits[2] * 0.85 + hits[3] * 0.6) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
-                    num += hits[0] * 0.01;
-                    __instance.resultsSingleplayer.text = __instance.resultsSingleplayer.text + "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
+                    double num = (hits[0] + hits[1] + hits[2] * 0.75 + hits[3] * 0.5) / (hits[0] + hits[1] + hits[2] + hits[3] + hits[4]) * 100;
+                    __instance.resultsSingleplayer.text += "\nAccuracy: " + Math.Round(num, 2).ToString() + "%";
+                    if (hits[0] > 0) __instance.resultsSingleplayer.text += " + " + (hits[0] * 0.01).ToString() + "%";
                     __instance.resultsSingleplayer.gameObject.SetActive(true);
                 }
                 else 
