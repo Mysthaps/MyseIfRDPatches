@@ -4,6 +4,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 
 - **ShowFPS**: Adds an FPS counter on the top left of the screen while in a level.
 - **ShowAccuracy**: Adds an accuracy count at the end of a level if Detailed Level Results is enabled.
+- **AutoArtistLinks**: Automatically adds artist links to a level. (from ADOFAI)
 - **EnableOldSpeedChange**: Changes chili/ice speed to be 2x/.5x, respectively.
 - **RankColorOnDoubleSpeed**: Changes rank colors if **EnableOldSpeedChange** is enabled.
 - **EnableBossSpeedChange**: Allows the speed of boss levels to be changed.
