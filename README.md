@@ -5,10 +5,10 @@ A plugin that adds several modifications to Rhythm Doctor.
 - **ShowFPS**: Adds an FPS counter on the top left of the screen while in a level.
 - **ShowAccuracy**: Adds an accuracy count at the end of a level if Detailed Level Results is enabled.
 - **AutoArtistLinks**: Automatically adds artist links to a level. (from ADOFAI)
+- **ChallengeMode**: Makes levels more challenging.
 - **EnableOldSpeedChange**: Changes chili/ice speed to be 2x/.5x, respectively.
 - **RankColorOnDoubleSpeed**: Changes rank colors if **EnableOldSpeedChange** is enabled.
 - **EnableBossSpeedChange**: Allows the speed of boss levels to be changed.
-- **SamuHrai**, **FiveFourteen**: Joke settings. Will not be updated.
 
 ## Notes
 - All configurations are disabled by default. Enable them from `BepInEx/config/com.rhythmdr.garbageplugins.cfg` or via BepInEx Configuration Manager.
@@ -24,6 +24,9 @@ A plugin that adds several modifications to Rhythm Doctor.
 | ±120ms | 60% |
 | ±400ms or completely miss | 0% |
 - For **EnableOldSpeedChange**: Normal oneshot animations will be broken. Bars shorter than 200ms will not work properly.
+- For **ChallengeMode**: There are two modes:
+  - Heartbreak: Level fails if you crack any row's heart.
+  - Perfect: Level fails if you get a single miss.
 
 ## Installation
 1. Download the latest version of BepInEx 5 [here](https://github.com/BepInEx/BepInEx/releases). (Scroll down past the BepInEx 6 pre-release)
