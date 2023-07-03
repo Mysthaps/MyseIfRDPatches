@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace GarbagePlugins
 {
-    [BepInPlugin("com.rhythmdr.garbageplugins", "MyseIf's RD Patches", "1.4.0")]
+    [BepInPlugin("com.rhythmdr.garbageplugins", "MyseIf's RD Patches", "1.5.0")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Plugin : BaseUnityPlugin
     {
@@ -19,11 +19,13 @@ namespace GarbagePlugins
         private static ConfigEntry<bool> configEnableBossSpeedChange;
         private static ConfigEntry<ShowFpsOptions> configShowFPS;
         private static ConfigEntry<bool> configShowAccuracy;
+        private static ConfigEntry<ChallengeModeOptions> configChallengeMode;
         private static ConfigEntry<bool> configAutoArtistLinks;
         private static ConfigEntry<bool> configFiveFourteen;
         private static ConfigEntry<bool> configSamuHrai;
 
         private enum ShowFpsOptions { Enabled, Legacy, Disabled }
+        private enum ChallengeModeOptions { None, Heartbreak, Perfect }
 
         private void Awake()
         {
@@ -32,6 +34,7 @@ namespace GarbagePlugins
             configEnableBossSpeedChange = Config.Bind("Speed Modifiers", "EnableBossSpeedChange", false, "Allows the speed of boss levels to be changed.");
             configShowFPS = Config.Bind("General", "ShowFPS", ShowFpsOptions.Disabled, "Adds an FPS counter on the top left of the screen while in a level.");
             configShowAccuracy = Config.Bind("General", "ShowAccuracy", false, "Adds an accuracy count at the end of a level if Detailed Level Results is enabled.\nDoes not work for 2P.");
+            configChallengeMode = Config.Bind("General", "ChallengeMode", ChallengeModeOptions.None, "Heartbreak: Don't be a heartbreaker. Level fails if you crack any row's heart.\nPerfect: Level fails if you get a single miss.");
             configAutoArtistLinks = Config.Bind("Editor", "AutoArtistLinks", false, "Automatically adds artist links to a level. (from ADOFAI)");
             configFiveFourteen = Config.Bind("Funny", "FiveFourteen", false, "514");
             configSamuHrai = Config.Bind("Funny", "SamuHrai", false, "Replaces \"Samurai.\" text with \"h\" in Samurai. easter egg.");
@@ -50,6 +53,9 @@ namespace GarbagePlugins
 
             if (configShowAccuracy.Value)
                 Harmony.CreateAndPatchAll(typeof(ShowAccuracy));
+
+            if (configChallengeMode.Value != ChallengeModeOptions.None)
+                Harmony.CreateAndPatchAll(typeof(ChallengeMode));
 
             if (configAutoArtistLinks.Value)
                 Harmony.CreateAndPatchAll(typeof(AutoArtistLinks));
@@ -236,6 +242,35 @@ namespace GarbagePlugins
             public static void Postfix(ref InputField ___artistLinks)
             {
                 ___artistLinks.text = str;
+            }
+        }
+
+        private static class ChallengeMode
+        {
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(scrRowEntities), "CrackAdvance")]
+            public static void Postfix(scrRowEntities __instance)
+            {
+                if ((configChallengeMode.Value == ChallengeModeOptions.Heartbreak && __instance.crackCounter >= __instance.game.currentLevel.missesToCrackHeart) ||
+                    configChallengeMode.Value == ChallengeModeOptions.Perfect)
+                {
+                    try {
+                        __instance.game.FailLevel(__instance);
+                    }
+                    catch {
+                        __instance.game.hud.rankscreen.SetActive(true);
+                        __instance.game.hud.rank.gameObject.SetActive(false);
+                        __instance.game.hud.description.gameObject.SetActive(false);
+                        __instance.game.hud.statusText.gameObject.SetActive(false);
+                        __instance.game.hud.customText.text = RDString.Get("status.levelFailed");
+                        __instance.game.hud.customText.gameObject.SetActive(true);
+                        __instance.game.hud.header.gameObject.SetActive(false);
+                        __instance.game.hud.descriptionLayoutGroup.gameObject.SetActive(true);
+                        __instance.game.hud.description.gameObject.SetActive(true);
+                        __instance.game.hud.description.text = RDString.Get("dialogue.dontGiveUp");
+                        __instance.game.hud.ExitLevelAfterSeconds(3f);
+                    };
+                }
             }
         }
 
