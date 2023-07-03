@@ -258,18 +258,8 @@ namespace GarbagePlugins
                         __instance.game.FailLevel(__instance);
                     }
                     catch {
-                        __instance.game.hud.rankscreen.SetActive(true);
-                        __instance.game.hud.rank.gameObject.SetActive(false);
-                        __instance.game.hud.description.gameObject.SetActive(false);
-                        __instance.game.hud.statusText.gameObject.SetActive(false);
-                        __instance.game.hud.customText.text = RDString.Get("status.levelFailed");
-                        __instance.game.hud.customText.gameObject.SetActive(true);
-                        __instance.game.hud.header.gameObject.SetActive(false);
-                        __instance.game.hud.descriptionLayoutGroup.gameObject.SetActive(true);
-                        __instance.game.hud.description.gameObject.SetActive(true);
-                        __instance.game.hud.description.text = RDString.Get("dialogue.dontGiveUp");
-                        __instance.game.hud.ExitLevelAfterSeconds(3f);
-                    };
+                        __instance.game.LevelFailSequence(__instance);
+                    }
                 }
             }
         }
