@@ -39,6 +39,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 4. Download the latest version of the mod from [here](https://github.com/HellUser0/GarbagePlugins/releases). It should be named `GarbagePlugins_1.x.x.zip`.
 5. Unzip the file you downloaded into your Rhythm Doctor installation folder. Put the file at `BepInEx/plugins/GarbagePlugins/GarbagePlugins.dll`.
 6. Launch the game.
+    - If BepInEx does not load, change `ignoreDisableSwitch` to `true` in `doorstop_config.ini`.
 7. Configure the plugin as needed in `BepInEx/config/com.rhythmdr.garbageplugins.cfg`.
 8. **Optional:** Install the [BepInEx Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager) to configure the mod with a GUI by pressing `F1`.
 9. **Optional:** To enable in-game reloading, install the [BepInEx ScriptEngine](https://github.com/BepInEx/BepInEx.Debug/releases/latest), create a `scripts` folder in the `BepInEx` folder then move the `GarbagePlugins.dll` file to that folder. You should now be able to reload the plugin by pressing `F6` in-game. Enabling "LoadOnStart" is highly recommended.
