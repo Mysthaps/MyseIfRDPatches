@@ -112,6 +112,9 @@ namespace MyseIfRDPatches
         
             Harmony.CreateAndPatchAll(typeof(SpeedChange));
 
+            if (configEnableBossSpeedChange.Value)
+                Harmony.CreateAndPatchAll(typeof(BossSpeedChange));
+
             if (configShowAccuracy.Value)
                 Harmony.CreateAndPatchAll(typeof(ShowAccuracy));
 
