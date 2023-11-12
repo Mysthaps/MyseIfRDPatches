@@ -26,7 +26,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 
 ## Installation
 1. If this is your first time, download the Installation Quickstart zip from [here](https://github.com/Mysthaps/MyseIfRDPlugins/releases). Unzip it in your Rhythm Doctor installation folder. The zip file contains BepInEx 5, Configuration Manager and ScriptEngine, but not the mod itself.
-2. Download the latest version of the mod from [here](https://github.com/Mysthaps/MyseIfRDPlugins/releases). It should be named `MyseIfRDPlugins_1.x.x.dll`. Put the file at `BepInEx/scripts/MyseIfRDPlugins.dll` in your Rhythm Doctor installation folder.
+2. Download the latest version of the mod from [here](https://github.com/Mysthaps/MyseIfRDPlugins/releases). It should be named `MyseIfRDPlugins_2.x.x.dll`. Put the file in `BepInEx/scripts/` in your Rhythm Doctor installation folder.
 3. Launch the game.
     - If BepInEx does not load, change `ignoreDisableSwitch` to `true` in `doorstop_config.ini`.
 4. Configure the mod in-game with a GUI by pressing `F1`. Reload the plugin and settings by pressing `F6`.
