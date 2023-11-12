@@ -12,7 +12,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 
 
 ## Notes
-- All configurations are disabled by default. Enable them from `BepInEx/config/com.rhythmdr.garbageplugins.cfg` or via BepInEx Configuration Manager.
+- All configurations are disabled by default. Enable them via BepInEx Configuration Manager.
 - For **CustomChiliSpeed**: Normal oneshot animations will be broken for higher speeds. Bars shorter than 200ms will not work properly.
 - For **ShowAccuracy**: Accuracy chart is as below:
 
