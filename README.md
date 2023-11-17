@@ -20,8 +20,8 @@ A plugin that adds several modifications to Rhythm Doctor.
 | --- | --- |
 | ±25ms | +0.01% (for ADOFAI accuracy type) |
 | ±40ms | 100% |
-| ±80ms | 85% |
-| ±120ms | 60% |
+| ±80ms | 75% |
+| ±120ms | 50% |
 | ±400ms or completely miss | 0% |
 
 ## Installation

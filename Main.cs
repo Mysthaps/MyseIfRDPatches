@@ -135,6 +135,11 @@ namespace MyseIfRDPatches
             Logger.LogInfo($"MyseIf's RD Patches is loaded!");
         }
 
+        private void OnDestroy()
+        {
+            Harmony.UnpatchAll();
+        }
+
         private static class scnGamePatch 
         {
             // Makes Story Mode levels not break

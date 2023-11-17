@@ -67,18 +67,27 @@ namespace MyseIfRDPatches
             {
                 double P1Accuracy = (P1Hits[0] + P1Hits[1] + P1Hits[2] * 0.75 + P1Hits[3] * 0.5) / (P1Hits[0] + P1Hits[1] + P1Hits[2] + P1Hits[3] + P1Hits[4]) * 100;
                 double P2Accuracy = (P2Hits[0] + P2Hits[1] + P2Hits[2] * 0.75 + P2Hits[3] * 0.5) / (P2Hits[0] + P2Hits[1] + P2Hits[2] + P2Hits[3] + P2Hits[4]) * 100;
+                string SingleplayerResults = "";
+                string P1Results = "";
+                string P2Results = "";
                 if (!GC.twoPlayerMode)
                 {
-                    __instance.resultsSingleplayer.text += "\nAccuracy: " + Math.Round(P1Accuracy, 2).ToString("0.00") + "%";
-                    if (Main.configAccuracyMode.Value == Main.AccuracyOptions.ADOFAI && P1Hits[0] > 0) __instance.resultsSingleplayer.text += " + " + (P1Hits[0] * 0.01).ToString("0.00") + "%";
+                    SingleplayerResults = __instance.resultsSingleplayer.text + 
+                        "\nAccuracy: " + Math.Round(P1Accuracy, 2).ToString("0.00") + "%" + 
+                        (Main.configAccuracyMode.Value == Main.AccuracyOptions.ADOFAI && P1Hits[0] > 0 ? " + " + (P1Hits[0] * 0.01).ToString("0.00") + "%" : "");
                 }
                 else 
                 {
-                    __instance.resultsP1.text += "\nAccuracy: " + Math.Round(P1Accuracy, 2).ToString("0.00") + "%";
-                    if (Main.configAccuracyMode.Value == Main.AccuracyOptions.ADOFAI && P1Hits[0] > 0) __instance.resultsP1.text += " + " + (P1Hits[0] * 0.01).ToString("0.00") + "%";
-                    __instance.resultsP2.text += "\nAccuracy: " + Math.Round(P2Accuracy, 2).ToString("0.00") + "%";
-                    if (Main.configAccuracyMode.Value == Main.AccuracyOptions.ADOFAI && P2Hits[0] > 0) __instance.resultsP2.text += " + " + (P2Hits[0] * 0.01).ToString("0.00") + "%";
+                    P1Results = __instance.resultsP1.text + 
+                        "\nAccuracy: " + Math.Round(P1Accuracy, 2).ToString("0.00") + "%" +
+                        (Main.configAccuracyMode.Value == Main.AccuracyOptions.ADOFAI && P1Hits[0] > 0 ? " + " + (P1Hits[0] * 0.01).ToString("0.00") + "%" : "");
+                    P2Results = __instance.resultsP2.text + 
+                        "\nAccuracy: " + Math.Round(P2Accuracy, 2).ToString("0.00") + "%" +
+                        (Main.configAccuracyMode.Value == Main.AccuracyOptions.ADOFAI && P2Hits[0] > 0 ? " + " + (P2Hits[0] * 0.01).ToString("0.00") + "%" : "");
                 }
+                __instance.resultsSingleplayer.text = SingleplayerResults;
+                __instance.resultsP1.text = P1Results;
+                __instance.resultsP2.text = P2Results;
             }
         }
     }
