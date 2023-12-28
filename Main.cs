@@ -16,6 +16,7 @@ namespace MyseIfRDPatches
         internal static ConfigEntry<float> configCustomIceSpeed;
         private static ConfigEntry<bool> configRankColorOnSpeedChange;
         private static ConfigEntry<bool> configEnableBossSpeedChange;
+        internal static ConfigEntry<float> configPauseMenuTransparency;
         internal static ConfigEntry<ShowFPSOptions> configShowFPS;
         private static ConfigEntry<bool> configShowAccuracy;
         internal static ConfigEntry<AccuracyOptions> configAccuracyMode;
@@ -51,6 +52,14 @@ namespace MyseIfRDPatches
                     "Changes rank screen color based on values set in Custom Chili Speed and Custom Ice Speed.",
                     null,
                     new ConfigurationManagerAttributes { Order = 1 }
+                )
+            );
+            configPauseMenuTransparency = Config.Bind(
+                "General", "Pause Menu Transparency", 1f, 
+                new ConfigDescription(
+                    "Changes the background transparency while paused.",
+                    new AcceptableValueRange<float>(0f, 1f), 
+                    new ConfigurationManagerAttributes { Order = 3 }
                 )
             );
             configEnableBossSpeedChange = Config.Bind(
@@ -111,7 +120,8 @@ namespace MyseIfRDPatches
             ); 
         
             Harmony.CreateAndPatchAll(typeof(SpeedChange));
-
+            Harmony.CreateAndPatchAll(typeof(PauseMenuTransparency));
+            
             if (configEnableBossSpeedChange.Value)
                 Harmony.CreateAndPatchAll(typeof(BossSpeedChange));
 
@@ -129,7 +139,7 @@ namespace MyseIfRDPatches
 
             if (configAutoArtistLinks.Value)
                 Harmony.CreateAndPatchAll(typeof(AutoArtistLinks));
-            
+
             Harmony.CreateAndPatchAll(typeof(scnGamePatch));
 
             Logger.LogInfo($"MyseIf's RD Patches is loaded!");
