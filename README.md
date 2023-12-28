@@ -2,13 +2,14 @@ A plugin that adds several modifications to Rhythm Doctor.
 
 ## Features
 
-- **CustomChiliSpeed**, **CustomIceSpeed**: Allows changing the chili/ice speeds to a value higher or lower than the game's defaults.
-- **EnableBossSpeedChange**: Allows the speed of boss levels to be changed.
-- **ShowFPS**: Adds an FPS counter on the top left of the screen while in a level.
-- **FailCondition**: Fail the level if a condition is met.
-- **GhostTapMiss**: Get a miss for pressing the button without hitting a beat.
-- **ShowAccuracy**: Adds an accuracy count at the end of a level if Detailed Level Results is enabled.
-- **AutoArtistLinks**: Automatically adds artist links to a level.
+- **Custom Chili Speed**, **Custom Ice Speed**: Allows changing the chili/ice speeds to a value higher or lower than the game's defaults.
+- **Enable Boss Speed Change**: Allows the speed of boss levels to be changed.
+- **Show FPS**: Adds an FPS counter on the top left of the screen while in a level.
+- **Fail Condition**: Fail the level if a condition is met.
+- **Ghost Tap Miss**: Get a miss for pressing the button without hitting a beat.
+- **Show Accuracy**: Adds an accuracy count at the end of a level if Detailed Level Results is enabled.
+- **Auto Artist Links**: Automatically adds artist links to a level.
+- **Pause Menu Transparency**: Changes the transparency of the *background* while paused.
 
 
 ## Notes
