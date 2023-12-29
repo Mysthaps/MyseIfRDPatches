@@ -10,6 +10,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 - **Show Accuracy**: Adds an accuracy count at the end of a level if Detailed Level Results is enabled.
 - **Auto Artist Links**: Automatically adds artist links to a level.
 - **Pause Menu Transparency**: Changes the transparency of the *background* while paused.
+- **Pause Menu Scale**: Changes the size of the menu while paused.
 
 
 ## Notes
