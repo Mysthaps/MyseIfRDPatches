@@ -8,21 +8,22 @@ using HarmonyLib;
 
 namespace MyseIfRDPatches
 {
-    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.1.0")]
+    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.2.0")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Main : BaseUnityPlugin
     {
         internal static ConfigEntry<float> configCustomChiliSpeed;
         internal static ConfigEntry<float> configCustomIceSpeed;
-        private static ConfigEntry<bool> configRankColorOnSpeedChange;
-        private static ConfigEntry<bool> configEnableBossSpeedChange;
+        internal static ConfigEntry<bool> configRankColorOnSpeedChange;
+        internal static ConfigEntry<bool> configEnableBossSpeedChange;
+        internal static ConfigEntry<float> configPauseMenuScale;
         internal static ConfigEntry<float> configPauseMenuTransparency;
         internal static ConfigEntry<ShowFPSOptions> configShowFPS;
-        private static ConfigEntry<bool> configShowAccuracy;
+        internal static ConfigEntry<bool> configShowAccuracy;
         internal static ConfigEntry<AccuracyOptions> configAccuracyMode;
-        private static ConfigEntry<bool> configGhostTapMiss;
+        internal static ConfigEntry<bool> configGhostTapMiss;
         internal static ConfigEntry<FailConditionOptions> configFailCondition;
-        private static ConfigEntry<bool> configAutoArtistLinks;
+        internal static ConfigEntry<bool> configAutoArtistLinks;
 
         internal enum ShowFPSOptions { Enabled, Legacy, Disabled }
         internal enum FailConditionOptions { None, Heartbreak, Perfect }
@@ -33,7 +34,7 @@ namespace MyseIfRDPatches
             configCustomChiliSpeed = Config.Bind(
                 "Speed Modifiers", "Custom Chili Speed", 1.5f, 
                 new ConfigDescription(
-                    "Changes the speed of Chili mode. Default is 1.5x.", 
+                    "Changes the speed of Chili mode.", 
                     new AcceptableValueRange<float>(1.5f, 3f), 
                     new ConfigurationManagerAttributes { Order = 3 }
                 )
@@ -41,7 +42,7 @@ namespace MyseIfRDPatches
             configCustomIceSpeed = Config.Bind(
                 "Speed Modifiers", "Custom Ice Speed", 0.75f, 
                 new ConfigDescription(
-                    "Changes the speed of Ice mode. Default is 0.75x.", 
+                    "Changes the speed of Ice mode.", 
                     new AcceptableValueRange<float>(0.1f, 0.75f), 
                     new ConfigurationManagerAttributes { Order = 2 }
                 )
@@ -52,6 +53,14 @@ namespace MyseIfRDPatches
                     "Changes rank screen color based on values set in Custom Chili Speed and Custom Ice Speed.",
                     null,
                     new ConfigurationManagerAttributes { Order = 1 }
+                )
+            );
+            configPauseMenuScale = Config.Bind(
+                "General", "Pause Menu Scale", 1f, 
+                new ConfigDescription(
+                    "Changes the scale of the pause menu.",
+                    new AcceptableValueRange<float>(0.25f, 1f),
+                    new ConfigurationManagerAttributes { ShowRangeAsPercent = true, Order = 4 }
                 )
             );
             configPauseMenuTransparency = Config.Bind(
@@ -118,9 +127,6 @@ namespace MyseIfRDPatches
                     new ConfigurationManagerAttributes { Order = 1 }
                 )
             ); 
-        
-            Harmony.CreateAndPatchAll(typeof(SpeedChange));
-            Harmony.CreateAndPatchAll(typeof(PauseMenuTransparency));
             
             if (configEnableBossSpeedChange.Value)
                 Harmony.CreateAndPatchAll(typeof(BossSpeedChange));
@@ -139,6 +145,15 @@ namespace MyseIfRDPatches
 
             if (configAutoArtistLinks.Value)
                 Harmony.CreateAndPatchAll(typeof(AutoArtistLinks));
+
+            if (configPauseMenuScale.Value != 1f)
+                Harmony.CreateAndPatchAll(typeof(PauseMenuScale));
+
+            if (configCustomChiliSpeed.Value != 1.5f || configCustomIceSpeed.Value != 0.75f)
+                Harmony.CreateAndPatchAll(typeof(SpeedChange));
+
+            if (configPauseMenuTransparency.Value != 1f)
+                Harmony.CreateAndPatchAll(typeof(PauseMenuTransparency));
 
             Harmony.CreateAndPatchAll(typeof(scnGamePatch));
 
