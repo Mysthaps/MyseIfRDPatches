@@ -8,7 +8,7 @@ using HarmonyLib;
 
 namespace MyseIfRDPatches
 {
-    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.2.0")]
+    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.3.0")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Main : BaseUnityPlugin
     {
@@ -24,6 +24,7 @@ namespace MyseIfRDPatches
         internal static ConfigEntry<bool> configGhostTapMiss;
         internal static ConfigEntry<FailConditionOptions> configFailCondition;
         internal static ConfigEntry<bool> configAutoArtistLinks;
+        internal static ConfigEntry<bool> configWindowDanceScale;
 
         internal enum ShowFPSOptions { Enabled, Legacy, Disabled }
         internal enum FailConditionOptions { None, Heartbreak, Perfect }
@@ -53,6 +54,14 @@ namespace MyseIfRDPatches
                     "Changes rank screen color based on values set in Custom Chili Speed and Custom Ice Speed.",
                     null,
                     new ConfigurationManagerAttributes { Order = 1 }
+                )
+            );
+            configWindowDanceScale = Config.Bind(
+                "General", "Force Window Dance Scale", false, 
+                new ConfigDescription(
+                    "Forces normal Window Dance resolution to always be at least 2x.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 5 }
                 )
             );
             configPauseMenuScale = Config.Bind(
@@ -154,6 +163,9 @@ namespace MyseIfRDPatches
 
             if (configPauseMenuTransparency.Value != 1f)
                 Harmony.CreateAndPatchAll(typeof(PauseMenuTransparency));
+
+            if (configWindowDanceScale.Value)
+                Harmony.CreateAndPatchAll(typeof(WindowDanceScale));
 
             Harmony.CreateAndPatchAll(typeof(scnGamePatch));
 
