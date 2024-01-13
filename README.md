@@ -11,6 +11,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 - **Auto Artist Links**: Automatically adds artist links to a level.
 - **Pause Menu Transparency**: Changes the transparency of the *background* while paused.
 - **Pause Menu Scale**: Changes the size of the menu while paused.
+- **Force Window Dance Scale**: Forces normal Window Dance resolution to always be at least 2x. *Does not apply to Simulated.*
 
 
 ## Notes
