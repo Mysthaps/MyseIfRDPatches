@@ -15,9 +15,11 @@ namespace MyseIfRDPatches
         [HarmonyPatch(typeof(scnGame), "StartTheGame")]
         public static bool Prefix(ref float speed)
         {
-            if (chiliSpeed == 2f) chiliSpeed = 2.000001f;
-            if (speed > 1f) speed = chiliSpeed;
-            if (speed < 1f) speed = iceSpeed;
+            /*if (Main.configCustomChiliSpeed.Value < 150) Main.configCustomChiliSpeed.Value = 150;
+            if (Main.configCustomIceSpeed.Value < 10) Main.configCustomIceSpeed.Value = 10;*/
+
+            if (speed > 1f) speed = chiliSpeed / 100 + (chiliSpeed == 200 ? 0.001f : 0);
+            if (speed < 1f) speed = iceSpeed / 100;
             return true;
         }
 

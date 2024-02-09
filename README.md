@@ -12,6 +12,7 @@ A plugin that adds several modifications to Rhythm Doctor.
 - **Pause Menu Transparency**: Changes the transparency of the *background* while paused.
 - **Pause Menu Scale**: Changes the size of the menu while paused.
 - **Force Window Dance Scale**: Forces normal Window Dance resolution to always be at least 2x. *Does not apply to Simulated.*
+- **Level Finish Details**: Adds current level metadata, speed and mods used to the level finish screen.
 
 
 ## Notes
@@ -34,7 +35,7 @@ You can download the Installation Quickstart zip from [the latest release](https
 ### Other
 Follow the [installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) for BepInEx5. Optionally, you can also download BepInEx Configuration Manager and ScriptEngine.
 
-2. Download the latest version of the mod from the latest release. It should be named `MyseIfRDPlugins_2.x.x.dll`. Put the file in `BepInEx/scripts/` in your Rhythm Doctor installation folder. You'll need to redownload the file if you want to update the mod.
+2. Download the latest version of the mod from the latest release. It should be named `MyseIfRDPatches_2.x.x.dll`. Put the file in `BepInEx/scripts/` in your Rhythm Doctor installation folder. You'll need to redownload the file if you want to update the mod.
 3. Launch the game.
     - If BepInEx does not load, change `ignoreDisableSwitch` to `true` in `doorstop_config.ini`.
 4. With BepInEx Configuration Manager, configure the mod in-game with a GUI by pressing `F1`. With ScriptEngine, reload the plugin and settings by pressing `F6`.

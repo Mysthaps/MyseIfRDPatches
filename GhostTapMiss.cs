@@ -8,12 +8,18 @@ namespace MyseIfRDPatches
 {
     public class GhostTapMiss
     {
-        internal static bool hasFailedLevel = false;
+        internal static bool endLevel = false;
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HUD), "AdvanceGameover")]
+        public static void Postfix(){
+            endLevel = true;
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(scnGame), "UpdateGameplayInput")]
         public static void Postfix(RDPlayer player, bool keyPressed, scnGame __instance)
         {
-            if (hasFailedLevel) return;
+            if (endLevel) return;
             if (keyPressed && __instance.spacebarOnNothing && __instance.levelIdentifier != "SongOfTheSea" && __instance.levelIdentifier != "SongOfTheSeaH")
             {
                 scrConductor.PlayImmediately(GameSoundType.BigMistake, group: RDUtils.GetMixerGroup((player == RDPlayer.P1 ? "PlayerOneMistakes" : "PlayerTwoMistakes")), pan: (GC.twoPlayerMode ? RDUtils.OverridePanFor2P(player, 0.0f) : 0.0f));
@@ -29,7 +35,7 @@ namespace MyseIfRDPatches
                             catch {
                                 __instance.game.LevelFailSequence(row.ent);
                             }
-                            hasFailedLevel = true;
+                            endLevel = true;
                             break;
                         }
                     }

@@ -12,8 +12,8 @@ namespace MyseIfRDPatches
     [BepInProcess("Rhythm Doctor.exe")]
     public class Main : BaseUnityPlugin
     {
-        internal static ConfigEntry<float> configCustomChiliSpeed;
-        internal static ConfigEntry<float> configCustomIceSpeed;
+        internal static ConfigEntry<int> configCustomChiliSpeed;
+        internal static ConfigEntry<int> configCustomIceSpeed;
         internal static ConfigEntry<bool> configRankColorOnSpeedChange;
         internal static ConfigEntry<bool> configEnableBossSpeedChange;
         internal static ConfigEntry<float> configPauseMenuScale;
@@ -25,6 +25,7 @@ namespace MyseIfRDPatches
         internal static ConfigEntry<FailConditionOptions> configFailCondition;
         internal static ConfigEntry<bool> configAutoArtistLinks;
         internal static ConfigEntry<bool> configWindowDanceScale;
+        internal static ConfigEntry<bool> configLevelFinishDetails;
 
         internal enum ShowFPSOptions { Enabled, Legacy, Disabled }
         internal enum FailConditionOptions { None, Heartbreak, Perfect }
@@ -33,18 +34,18 @@ namespace MyseIfRDPatches
         private void Awake()
         {
             configCustomChiliSpeed = Config.Bind(
-                "Speed Modifiers", "Custom Chili Speed", 1.5f, 
+                "Speed Modifiers", "Custom Chili Speed", 150, 
                 new ConfigDescription(
-                    "Changes the speed of Chili mode.", 
-                    new AcceptableValueRange<float>(1.5f, 3f), 
+                    "Changes the speed of Chili mode.\nDefault: 150 = 1.5x", 
+                    new AcceptableValueRange<int>(150, 300), 
                     new ConfigurationManagerAttributes { Order = 3 }
                 )
             );
             configCustomIceSpeed = Config.Bind(
-                "Speed Modifiers", "Custom Ice Speed", 0.75f, 
+                "Speed Modifiers", "Custom Ice Speed", 75, 
                 new ConfigDescription(
-                    "Changes the speed of Ice mode.", 
-                    new AcceptableValueRange<float>(0.1f, 0.75f), 
+                    "Changes the speed of Ice mode.\nDefault: 75 = 0.75x", 
+                    new AcceptableValueRange<int>(10, 75), 
                     new ConfigurationManagerAttributes { Order = 2 }
                 )
             );
@@ -54,6 +55,14 @@ namespace MyseIfRDPatches
                     "Changes rank screen color based on values set in Custom Chili Speed and Custom Ice Speed.",
                     null,
                     new ConfigurationManagerAttributes { Order = 1 }
+                )
+            );
+            configLevelFinishDetails = Config.Bind(
+                "General", "Level Finish Details", false, 
+                new ConfigDescription(
+                    "Adds current level metadata, speed and mods used to the level finish screen.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 6 }
                 )
             );
             configWindowDanceScale = Config.Bind(
@@ -158,7 +167,7 @@ namespace MyseIfRDPatches
             if (configPauseMenuScale.Value != 1f)
                 Harmony.CreateAndPatchAll(typeof(PauseMenuScale));
 
-            if (configCustomChiliSpeed.Value != 1.5f || configCustomIceSpeed.Value != 0.75f)
+            if (configCustomChiliSpeed.Value != 150 || configCustomIceSpeed.Value != 75)
                 Harmony.CreateAndPatchAll(typeof(SpeedChange));
 
             if (configPauseMenuTransparency.Value != 1f)
@@ -167,8 +176,11 @@ namespace MyseIfRDPatches
             if (configWindowDanceScale.Value)
                 Harmony.CreateAndPatchAll(typeof(WindowDanceScale));
 
-            Harmony.CreateAndPatchAll(typeof(scnGamePatch));
+            if (configLevelFinishDetails.Value)
+                Harmony.CreateAndPatchAll(typeof(LevelFinishDetails));
 
+            Harmony.CreateAndPatchAll(typeof(scnGamePatch));
+            
             Logger.LogInfo($"MyseIf's RD Patches is loaded!");
         }
 
@@ -196,12 +208,19 @@ namespace MyseIfRDPatches
 
             [HarmonyPatch(typeof(scnGame), "Start")]
             [HarmonyPostfix]
-            public static void Postfix()
+            public static void Postfix(scnGame __instance)
             {
                 ShowAccuracy.P1Hits = new int[] {0, 0, 0, 0, 0};
                 ShowAccuracy.P2Hits = new int[] {0, 0, 0, 0, 0};
 
-                GhostTapMiss.hasFailedLevel = false;
+                GhostTapMiss.endLevel = false;
+
+                Level_Custom curLevel = (__instance.currentLevel as Level_Custom);
+                LevelFinishDetails.song = curLevel.data.settings.song;
+                LevelFinishDetails.artist = curLevel.data.settings.artist;
+                LevelFinishDetails.author = curLevel.data.settings.author;
+
+                //RDC.debug = true;
             }
         }
     }
