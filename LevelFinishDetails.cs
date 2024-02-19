@@ -37,7 +37,7 @@ namespace MyseIfRDPatches
             if (Main.configGhostTapMiss.Value) modList.Add("GhostTapMiss");
             if (Main.configFailCondition.Value == Main.FailConditionOptions.Heartbreak) modList.Add("Heartbreak");
             if (Main.configFailCondition.Value == Main.FailConditionOptions.Perfect) modList.Add("Perfect");
-            if (RDTime.speed != 0) modList.Add(Math.Round(RDTime.speed, 2).ToString() + "x");
+            if (RDTime.speed != 1) modList.Add(Math.Round(RDTime.speed, 2).ToString() + "x");
 
             if (modList.Count > 0) mods = string.Join(", ", modList.ToArray());
             else mods = "None";
@@ -46,7 +46,7 @@ namespace MyseIfRDPatches
             if (scnGame.levelToLoadSource == LevelSource.InternalPath){
                 song = RDString.Get("levelSelect." + __instance.game.levelIdentifier);
                 artist = author = "";
-                bestPrev = Persistence.GetLevelRank(__instance.game.levelIdentifier);
+                bestPrev = Persistence.GetLevelRank(__instance.game.levelIdentifier).ToString();
                 str = Main.configLevelFinishText_MainGame.Value;
             }
             else str = Main.configLevelFinishText.Value;

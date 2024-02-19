@@ -12,21 +12,28 @@ A plugin that adds several modifications to Rhythm Doctor.
 - **Pause Menu Transparency**: Changes the transparency of the *background* while paused.
 - **Pause Menu Scale**: Changes the size of the menu while paused.
 - **Force Window Dance Scale**: Forces normal Window Dance resolution to always be at least 2x. *Does not apply to Simulated.*
-- **Level Finish Details**: Adds current level metadata, speed and mods used to the level finish screen.
+- **Level Finish Details**: Adds extra details to the level finish screen.
 
 
 ## Notes
 - All configurations are disabled by default. Enable them via BepInEx Configuration Manager.
-- For **CustomChiliSpeed**: Bars shorter than 200ms will not work properly.
-- For **ShowAccuracy**: Accuracy chart is as below:
+- For **Custom Chili Speed**: Bars shorter than 200ms will not work properly.
+- For **Show Accuracy**: Accuracy chart is as below:
 
 | Margins | Accuracy |
 | --- | --- |
-| ±25ms | +0.01% (for ADOFAI accuracy type) |
+| ±25ms | +0.01% (for ADOFAI type) |
 | ±40ms | 100% |
 | ±80ms | 75% |
 | ±120ms | 50% |
 | ±400ms or completely miss | 0% |
+
+- Variables for **Level Finish Details**:
+    - `{song}`: Song name. For main game levels, it will be translated according the language settings.
+    - `{artist}`: Artist name. For main game levels, this field will be left blank.
+    - `{author}`: Author name. For main game levels, this field will be left blank.
+    - `{mods}`: List of mods used (`GhostTapMiss`, `Heartbreak`, `Perfect` or speed modifiers). Returns `None` if there are no mods.
+    - `{prevBest}`: Previous best rank. Returns `NotFinished` if the level has not been played before.
 
 ## Installation
 1. Download the latest version of BepInEx 5.
