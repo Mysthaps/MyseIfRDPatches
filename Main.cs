@@ -16,16 +16,23 @@ namespace MyseIfRDPatches
         internal static ConfigEntry<int> configCustomIceSpeed;
         internal static ConfigEntry<bool> configRankColorOnSpeedChange;
         internal static ConfigEntry<bool> configEnableBossSpeedChange;
+
         internal static ConfigEntry<float> configPauseMenuScale;
         internal static ConfigEntry<float> configPauseMenuTransparency;
         internal static ConfigEntry<ShowFPSOptions> configShowFPS;
         internal static ConfigEntry<bool> configShowAccuracy;
         internal static ConfigEntry<AccuracyOptions> configAccuracyMode;
+        internal static ConfigEntry<bool> configWindowDanceScale;
+
         internal static ConfigEntry<bool> configGhostTapMiss;
         internal static ConfigEntry<FailConditionOptions> configFailCondition;
+
         internal static ConfigEntry<bool> configAutoArtistLinks;
-        internal static ConfigEntry<bool> configWindowDanceScale;
+
         internal static ConfigEntry<bool> configLevelFinishDetails;
+        internal static ConfigEntry<int> configLevelFinishFontSize;
+        internal static ConfigEntry<string> configLevelFinishText;
+        internal static ConfigEntry<string> configLevelFinishText_MainGame;
 
         internal enum ShowFPSOptions { Enabled, Legacy, Disabled }
         internal enum FailConditionOptions { None, Heartbreak, Perfect }
@@ -55,14 +62,6 @@ namespace MyseIfRDPatches
                     "Changes rank screen color based on values set in Custom Chili Speed and Custom Ice Speed.",
                     null,
                     new ConfigurationManagerAttributes { Order = 1 }
-                )
-            );
-            configLevelFinishDetails = Config.Bind(
-                "General", "Level Finish Details", false, 
-                new ConfigDescription(
-                    "Adds current level metadata, speed and mods used to the level finish screen.",
-                    null, 
-                    new ConfigurationManagerAttributes { Order = 6 }
                 )
             );
             configWindowDanceScale = Config.Bind(
@@ -145,6 +144,38 @@ namespace MyseIfRDPatches
                     new ConfigurationManagerAttributes { Order = 1 }
                 )
             ); 
+            configLevelFinishDetails = Config.Bind(
+                "Level Finish Details", "Level Finish Details", false, 
+                new ConfigDescription(
+                    "Adds extra details to the level finish screen.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 1 }
+                )
+            );
+            configLevelFinishFontSize = Config.Bind(
+                "Level Finish Details", "Font Size", 6, 
+                new ConfigDescription(
+                    "Changes the font size.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 2 }
+                )
+            );
+            configLevelFinishText = Config.Bind(
+                "Level Finish Details", "Text", "Song: {song}\\nArtist: {artist}\\nAuthor: {author}\\nMods: {mods}", 
+                new ConfigDescription(
+                    "Changes the text.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 3 }
+                )
+            );
+            configLevelFinishText_MainGame = Config.Bind(
+                "Level Finish Details", "Text (Main Levels)", "Song: {song}\\nMods: {mods}", 
+                new ConfigDescription(
+                    "Changes the text for main game levels.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 4 }
+                )
+            );
             
             if (configEnableBossSpeedChange.Value)
                 Harmony.CreateAndPatchAll(typeof(BossSpeedChange));
@@ -216,9 +247,14 @@ namespace MyseIfRDPatches
                 GhostTapMiss.endLevel = false;
 
                 Level_Custom curLevel = (__instance.currentLevel as Level_Custom);
+                string hash;
+                if (scnCLS.CachedData.levelFileData == null) hash = RDUtils.GetHash(new DirectoryInfo(Path.GetDirectoryName(scnGame.currentLevelPath)).Name);
+                else hash = scnCLS.CachedData.levelFileData.hash;
+
                 LevelFinishDetails.song = curLevel.data.settings.song;
                 LevelFinishDetails.artist = curLevel.data.settings.artist;
                 LevelFinishDetails.author = curLevel.data.settings.author;
+                LevelFinishDetails.bestPrev = ((Rank) Persistence.GetCustomLevelRank(hash, scnGame.customLevelSpeed)).ToString();
 
                 //RDC.debug = true;
             }
