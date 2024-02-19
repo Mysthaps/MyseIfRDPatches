@@ -40,11 +40,13 @@ namespace MyseIfRDPatches
             if (RDTime.speed != 0) modList.Add(Math.Round(RDTime.speed, 2).ToString() + "x");
 
             if (modList.Count > 0) mods = string.Join(", ", modList.ToArray());
+            else mods = "None";
 
             string str = "";
             if (scnGame.levelToLoadSource == LevelSource.InternalPath){
                 song = RDString.Get("levelSelect." + __instance.game.levelIdentifier);
                 artist = author = "";
+                bestPrev = Persistence.GetLevelRank(__instance.game.levelIdentifier);
                 str = Main.configLevelFinishText_MainGame.Value;
             }
             else str = Main.configLevelFinishText.Value;
