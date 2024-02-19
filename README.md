@@ -33,7 +33,7 @@ A plugin that adds several modifications to Rhythm Doctor.
     - `{artist}`: Artist name. For main game levels, this field will be left blank.
     - `{author}`: Author name. For main game levels, this field will be left blank.
     - `{mods}`: List of mods used (`GhostTapMiss`, `Heartbreak`, `Perfect` or speed modifiers). Returns `None` if there are no mods.
-    - `{prevBest}`: Previous best rank. Returns `NotFinished` if the level has not been played before.
+    - `{bestPrev}`: Previous best rank. Returns `NotFinished` if the level has not been played before.
 
 ## Installation
 1. Download the latest version of BepInEx 5.
