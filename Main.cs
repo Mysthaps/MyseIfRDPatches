@@ -149,7 +149,7 @@ namespace MyseIfRDPatches
                 new ConfigDescription(
                     "Adds extra details to the level finish screen.",
                     null, 
-                    new ConfigurationManagerAttributes { Order = 1 }
+                    new ConfigurationManagerAttributes { Order = 4 }
                 )
             );
             configLevelFinishFontSize = Config.Bind(
@@ -157,23 +157,23 @@ namespace MyseIfRDPatches
                 new ConfigDescription(
                     "Changes the font size.",
                     null, 
-                    new ConfigurationManagerAttributes { Order = 2 }
-                )
-            );
-            configLevelFinishText = Config.Bind(
-                "Level Finish Details", "Text", "Song: {song}\\nArtist: {artist}\\nAuthor: {author}\\nMods: {mods}", 
-                new ConfigDescription(
-                    "Changes the text.",
-                    null, 
                     new ConfigurationManagerAttributes { Order = 3 }
                 )
             );
+            configLevelFinishText = Config.Bind(
+                "Level Finish Details", "Text", "Song: {song}\nArtist: {artist}\nAuthor: {author}\nMods: {mods}", 
+                new ConfigDescription(
+                    "Changes the text.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 2 }
+                )
+            );
             configLevelFinishText_MainGame = Config.Bind(
-                "Level Finish Details", "Text (Main Levels)", "Song: {song}\\nMods: {mods}", 
+                "Level Finish Details", "Text (Main Levels)", "Song: {song}\nMods: {mods}", 
                 new ConfigDescription(
                     "Changes the text for main game levels.",
                     null, 
-                    new ConfigurationManagerAttributes { Order = 4 }
+                    new ConfigurationManagerAttributes { Order = 1 }
                 )
             );
             
