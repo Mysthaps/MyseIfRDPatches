@@ -42,8 +42,8 @@ namespace MyseIfRDPatches
         [HarmonyPatch(typeof(scrPlayerbox), "SpaceBarReleased")]
         public static bool Prefix(RDPlayer player, scrPlayerbox __instance, bool cpuTriggered) 
         {
-            if (player != __instance.ent.row.playerProp.GetCurrentPlayer() || !__instance.beatBeingHeld || cpuTriggered) return true;
-            double timeOffset = __instance.conductor.audioPos - __instance.beatReleaseTime;
+            if (player != __instance.ent.row.playerProp.GetCurrentPlayer() || !(bool) __instance.currentHoldBeat || cpuTriggered) return true;
+            double timeOffset = __instance.conductor.audioPos - __instance.currentHoldBeat.releaseTime;
             AddAccuracy(player, timeOffset);
             return true;
         }

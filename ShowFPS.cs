@@ -13,7 +13,7 @@ namespace MyseIfRDPatches
         [HarmonyPatch(typeof(scnGame), "Update")]
         public static void Postfix(scnGame __instance)
         {
-            if (!RDC.debug){
+            if (!__instance.debugText.gameObject.activeSelf){
                 __instance.debugText.gameObject.SetActive(true);
 
                 switch (Main.configShowFPS.Value)

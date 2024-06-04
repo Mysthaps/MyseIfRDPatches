@@ -12,7 +12,7 @@ namespace MyseIfRDPatches
         [HarmonyPatch(typeof(scrRowEntities), "CrackAdvance")]
         public static void Postfix(scrRowEntities __instance)
         {
-            if ((Main.configFailCondition.Value == Main.FailConditionOptions.Heartbreak && __instance.crackCounter >= __instance.game.currentLevel.missesToCrackHeart) ||
+            if ((Main.configFailCondition.Value == Main.FailConditionOptions.Heartbreak && __instance.rowMisses >= __instance.game.currentLevel.missesToCrackHeart) ||
                 Main.configFailCondition.Value == Main.FailConditionOptions.Perfect)
             {
                 try {
