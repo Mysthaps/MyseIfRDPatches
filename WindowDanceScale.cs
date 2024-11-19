@@ -12,7 +12,7 @@ namespace MyseIfRDPatches
         [HarmonyPatch(typeof(scrVfxControl), "GetWindowScaleForDancing")]
         public static void Postfix(ref int __result)
         {
-            __result = Math.Max(RDC.windowDanceSimulate ? 1 : 2, __result);
+            __result = Math.Max(2, __result);
         }
     }
 }

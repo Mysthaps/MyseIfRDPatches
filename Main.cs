@@ -15,7 +15,6 @@ namespace MyseIfRDPatches
         internal static ConfigEntry<int> configCustomChiliSpeed;
         internal static ConfigEntry<int> configCustomIceSpeed;
         internal static ConfigEntry<bool> configRankColorOnSpeedChange;
-        internal static ConfigEntry<bool> configEnableBossSpeedChange;
 
         internal static ConfigEntry<float> configPauseMenuScale;
         internal static ConfigEntry<float> configPauseMenuTransparency;
@@ -23,6 +22,7 @@ namespace MyseIfRDPatches
         internal static ConfigEntry<bool> configShowAccuracy;
         internal static ConfigEntry<AccuracyOptions> configAccuracyMode;
         internal static ConfigEntry<bool> configWindowDanceScale;
+        internal static ConfigEntry<bool> configDisableMute;
 
         internal static ConfigEntry<bool> configGhostTapMiss;
         internal static ConfigEntry<FailConditionOptions> configFailCondition;
@@ -64,6 +64,14 @@ namespace MyseIfRDPatches
                     new ConfigurationManagerAttributes { Order = 1 }
                 )
             );
+            configDisableMute = Config.Bind(
+                "General", "Disable Mute on Focus Loss", false, 
+                new ConfigDescription(
+                    "Disables audio being muted when switching to other applications.",
+                    null, 
+                    new ConfigurationManagerAttributes { Order = 6 }
+                )
+            );
             configWindowDanceScale = Config.Bind(
                 "General", "Force Window Dance Scale", false, 
                 new ConfigDescription(
@@ -86,14 +94,6 @@ namespace MyseIfRDPatches
                     "Changes the background transparency while paused.",
                     new AcceptableValueRange<float>(0f, 1f), 
                     new ConfigurationManagerAttributes { Order = 3 }
-                )
-            );
-            configEnableBossSpeedChange = Config.Bind(
-                "General", "Enable Boss Speed Change", false, 
-                new ConfigDescription(
-                    "Allows the speed of boss levels to be changed.",
-                    null,
-                    new ConfigurationManagerAttributes { Order = 2 }
                 )
             );
             configShowFPS = Config.Bind(
@@ -177,9 +177,6 @@ namespace MyseIfRDPatches
                 )
             );
             
-            if (configEnableBossSpeedChange.Value)
-                Harmony.CreateAndPatchAll(typeof(BossSpeedChange));
-
             if (configShowAccuracy.Value)
                 Harmony.CreateAndPatchAll(typeof(ShowAccuracy));
 
@@ -206,6 +203,9 @@ namespace MyseIfRDPatches
 
             if (configWindowDanceScale.Value)
                 Harmony.CreateAndPatchAll(typeof(WindowDanceScale));
+
+            if (configDisableMute.Value)
+                Harmony.CreateAndPatchAll(typeof(DisableMute));
 
             if (configLevelFinishDetails.Value)
                 Harmony.CreateAndPatchAll(typeof(LevelFinishDetails));
