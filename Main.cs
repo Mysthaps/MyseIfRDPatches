@@ -8,7 +8,7 @@ using HarmonyLib;
 
 namespace MyseIfRDPatches
 {
-    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.4.3")]
+    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.4.4")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Main : BaseUnityPlugin
     {
