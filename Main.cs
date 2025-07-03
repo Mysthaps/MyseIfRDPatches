@@ -8,7 +8,7 @@ using HarmonyLib;
 
 namespace MyseIfRDPatches
 {
-    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.4.4")]
+    [BepInPlugin("com.rhythmdr.myseifrdpatches", "MyseIf's RD Patches", "2.4.5")]
     [BepInProcess("Rhythm Doctor.exe")]
     public class Main : BaseUnityPlugin
     {
@@ -22,7 +22,6 @@ namespace MyseIfRDPatches
         internal static ConfigEntry<bool> configShowAccuracy;
         internal static ConfigEntry<AccuracyOptions> configAccuracyMode;
         internal static ConfigEntry<bool> configWindowDanceScale;
-        internal static ConfigEntry<bool> configDisableMute;
 
         internal static ConfigEntry<bool> configGhostTapMiss;
         internal static ConfigEntry<FailConditionOptions> configFailCondition;
@@ -64,14 +63,7 @@ namespace MyseIfRDPatches
                     new ConfigurationManagerAttributes { Order = 1 }
                 )
             );
-            configDisableMute = Config.Bind(
-                "General", "Disable Mute on Focus Loss", false, 
-                new ConfigDescription(
-                    "Disables audio being muted when switching to other applications.",
-                    null, 
-                    new ConfigurationManagerAttributes { Order = 6 }
-                )
-            );
+
             configWindowDanceScale = Config.Bind(
                 "General", "Force Window Dance Scale", false, 
                 new ConfigDescription(
@@ -104,6 +96,7 @@ namespace MyseIfRDPatches
                     new ConfigurationManagerAttributes { Order = 1 }
                 )
             );
+
             configGhostTapMiss = Config.Bind(
                 "Gameplay", "Miss on Ghost Taps", false, 
                 new ConfigDescription(
@@ -136,6 +129,7 @@ namespace MyseIfRDPatches
                     new ConfigurationManagerAttributes { Order = 1 }
                 )
             ); 
+
             configAutoArtistLinks = Config.Bind(
                 "Editor", "Automatic Artist Links", false, 
                 new ConfigDescription(
@@ -144,6 +138,7 @@ namespace MyseIfRDPatches
                     new ConfigurationManagerAttributes { Order = 1 }
                 )
             ); 
+
             configLevelFinishDetails = Config.Bind(
                 "Level Finish Details", "Level Finish Details", false, 
                 new ConfigDescription(
@@ -204,9 +199,6 @@ namespace MyseIfRDPatches
             if (configWindowDanceScale.Value)
                 Harmony.CreateAndPatchAll(typeof(WindowDanceScale));
 
-            if (configDisableMute.Value)
-                Harmony.CreateAndPatchAll(typeof(DisableMute));
-
             if (configLevelFinishDetails.Value)
                 Harmony.CreateAndPatchAll(typeof(LevelFinishDetails));
 
@@ -246,14 +238,13 @@ namespace MyseIfRDPatches
 
                 GhostTapMiss.endLevel = false;
 
-                Level_Custom curLevel = (__instance.currentLevel as Level_Custom);
                 string hash;
                 if (scnCLS.CachedData.levelFileData == null) hash = RDUtils.GetHash(new DirectoryInfo(Path.GetDirectoryName(scnGame.currentLevelPath)).Name);
                 else hash = scnCLS.CachedData.levelFileData.hash;
 
-                LevelFinishDetails.song = curLevel.data.settings.song;
-                LevelFinishDetails.artist = curLevel.data.settings.artist;
-                LevelFinishDetails.author = curLevel.data.settings.author;
+                LevelFinishDetails.song = RDLevelEditor.RDLevelData.current.settings.song;
+                LevelFinishDetails.artist = RDLevelEditor.RDLevelData.current.settings.artist;
+                LevelFinishDetails.author = RDLevelEditor.RDLevelData.current.settings.author;
                 LevelFinishDetails.bestPrev = ((Rank) Persistence.GetCustomLevelRank(hash, scnGame.levelSpeed)).ToString();
 
                 //RDC.debug = true;

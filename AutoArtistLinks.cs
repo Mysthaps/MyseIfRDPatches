@@ -12,6 +12,7 @@ namespace MyseIfRDPatches
         public static void Postfix(ArtistData data, ArtistUIDisclaimer __instance)
         {
             if (!string.IsNullOrEmpty(data.link1)) str = data.link1;
+            else str = "";
             if (!string.IsNullOrEmpty(data.link2)) str = str + ", " + data.link2;
             __instance.editor.levelSettings.artistLinks = str;
         }

@@ -22,7 +22,7 @@ namespace MyseIfRDPatches
             if (endLevel) return;
             if (keyPressed && __instance.spacebarOnNothing && __instance.levelIdentifier != "SongOfTheSea" && __instance.levelIdentifier != "SongOfTheSeaH")
             {
-                scrConductor.PlayImmediately(GameSoundType.BigMistake, group: RDUtils.GetMixerGroup((player == RDPlayer.P1 ? "PlayerOneMistakes" : "PlayerTwoMistakes")), pan: (GC.twoPlayerMode ? RDUtils.OverridePanFor2P(player, 0.0f) : 0.0f));
+                scrConductor.PlayFeedback(GameSoundType.BigMistake, group: RDUtils.GetMixerGroup((player == RDPlayer.P1 ? "PlayerOneMistakes" : "PlayerTwoMistakes")));
                 __instance.game.OnMistakeOrHeal(0f, 1f, null, false, player);
                 RDBase.Vfx.FlashBorderFeedback(false);
                 if (Main.configFailCondition.Value == Main.FailConditionOptions.Perfect)
